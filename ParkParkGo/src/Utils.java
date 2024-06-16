@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Utils {
@@ -10,7 +13,7 @@ public class Utils {
                 input = Integer.parseInt(scanner.nextLine());
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println("Entrée invalide. Veuillez entrer un nombre valide.");
                 retries--;
             }
         }
@@ -26,7 +29,7 @@ public class Utils {
                 input = Double.parseDouble(scanner.nextLine());
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println("Entrée invalide. Veuillez entrer un nombre valide.");
                 retries--;
             }
         }
@@ -42,10 +45,23 @@ public class Utils {
             if (!input.trim().isEmpty()) {
                 break;
             } else {
-                System.out.println("Invalid input. Please enter a non-empty value.");
+                System.out.println("Entrée invalide. Veuillez entrer une valeur non vide.");
                 retries--;
             }
         }
         return input;
+    }
+
+    // Method to ensure CSV headers are present
+    public static void ensureCsvHeaders(String fileName, String headers) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(headers);
+                writer.write("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ public class GestionnaireCourse {
     // List all vehicles
     public void listerVehicules() {
         for (Vehicule vehicule : vehicules) {
-            System.out.println("Vehicle: " + vehicule.getNumeroMatricule() + ", Type: " + vehicule.getType() + ", Car ID: " + vehicule.getCarID() + ", Etat: " + vehicule.getEtat());
+            System.out.println("Véhicule: " + vehicule.getNumeroMatricule() + ", Type: " + vehicule.getType() + ", ID de voiture: " + vehicule.getCarID());
         }
     }
 }

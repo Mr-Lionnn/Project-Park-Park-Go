@@ -41,7 +41,7 @@ public class Lieu {
         double lonDistance = Math.toRadians(end.getLongitude() - start.getLongitude());
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(start.getLatitude())) * Math.cos(Math.toRadians(end.getLatitude()))
-                + Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = R * c;
         return distance;

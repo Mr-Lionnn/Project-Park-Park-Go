@@ -2,18 +2,23 @@ import java.io.*;
 import java.util.*;
 
 public class Client {
-    private String clientID; // Use phone number as clientID
+    private static int nextClientID = 1;
+    private String clientID;
     private String numero;
     private String nom;
     private String prenom;
     private String password;
 
-    public Client(String numero, String nom, String prenom, String password) {
-        this.clientID = numero; // Set clientID as phone number
+    public Client(String clientID, String numero, String nom, String prenom, String password) {
+        this.clientID = clientID;
         this.numero = numero;
         this.nom = nom;
         this.prenom = prenom;
         this.password = password;
+    }
+
+    public static String generateUniqueID() {
+        return "C" + (nextClientID++);
     }
 
     // Getter and Setter methods
@@ -45,10 +50,18 @@ public class Client {
         this.password = password;
     }
 
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
     // Create a new client account
     public int creerCompte() {
-        if (numero.length() != 13 || !numero.matches("\\d+")) {
-            return -1; // invalid phone number
+        if (numero.length() != 8 || !numero.matches("\\d+") || numeroAlreadyExists(numero)) {
+            return -1; // invalid phone number or number already exists
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("clients.csv", true))) {
             writer.write(clientID + "," + numero + "," + nom + "," + prenom + "," + password);
@@ -60,6 +73,16 @@ public class Client {
         }
     }
 
+    private boolean numeroAlreadyExists(String numero) {
+        List<Client> clients = chargerClients();
+        for (Client client : clients) {
+            if (client.getNumero().equals(numero)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Load all clients from the file
     public static List<Client> chargerClients() {
         List<Client> clients = new ArrayList<>();
@@ -68,7 +91,7 @@ public class Client {
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",");
                 if (fields.length == 5) {
-                    Client client = new Client(fields[1], fields[2], fields[3], fields[4]);
+                    Client client = new Client(fields[0], fields[1], fields[2], fields[3], fields[4]);
                     clients.add(client);
                 }
             }
@@ -91,8 +114,8 @@ public class Client {
 
     // Update the client's phone number
     public void updateNumero(String newNumero) {
-        if (newNumero.length() != 13 || !newNumero.matches("\\d+")) {
-            System.out.println("Invalid phone number. It must be exactly 13 digits.");
+        if (newNumero.length() != 8 || !newNumero.matches("\\d+")) {
+            System.out.println("Numéro de téléphone invalide. Il doit contenir exactement 8 chiffres.");
             return;
         }
         this.numero = newNumero;
@@ -102,6 +125,13 @@ public class Client {
     // Update the client's password
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+        updateClientDetails();
+    }
+
+    // Update the client's name
+    public void updateNom(String newNom, String newPrenom) {
+        this.nom = newNom;
+        this.prenom = newPrenom;
         updateClientDetails();
     }
 
